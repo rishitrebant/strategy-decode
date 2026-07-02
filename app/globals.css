@@ -178,7 +178,11 @@ p {
 }
 
 a {
-  @apply text-primary hover:text-primary-hover transition-colors duration-150;
+  @apply text-primary transition-colors duration-150;
+}
+
+a:hover {
+  color: var(--color-primary-hover);
 }
 
 /* Responsive Breakpoints */
