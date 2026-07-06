@@ -1,0 +1,217 @@
+@import "tailwindcss";
+
+:root {
+  --canvas: #0a0a0a;
+  --surface: #121212;
+  --surface-raised: #181818;
+  --ink: #fafafa;
+  --muted: #9ca3af;
+  --rule: #2a2a2a;
+  --accent: #eab308;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-rule: var(--rule);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-geist);
+  --font-serif: var(--font-newsreader);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--canvas);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-geist), Arial, Helvetica, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--accent);
+  color: #0a0a0a;
+}
+
+a,
+button,
+input,
+summary {
+  outline-color: var(--accent);
+  outline-offset: 4px;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--accent);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.mobile-menu > summary {
+  list-style: none;
+}
+
+.mobile-menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.mobile-menu[open] .mobile-menu__line:first-child {
+  transform: translateY(3px) rotate(45deg);
+}
+
+.mobile-menu[open] .mobile-menu__line:last-child {
+  transform: translateY(-3px) rotate(-45deg);
+}
+
+.editorial-art {
+  --art-background: #d9b711;
+  --art-color: #0a0a0a;
+  --art-accent: #ba1e2d;
+  isolation: isolate;
+  position: relative;
+  min-height: 17rem;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 12%);
+  background: var(--art-background);
+  color: var(--art-color);
+}
+
+.editorial-art::before {
+  position: absolute;
+  z-index: -1;
+  top: 14%;
+  right: -7%;
+  width: 58%;
+  aspect-ratio: 1;
+  border: clamp(1.2rem, 4vw, 3.5rem) solid var(--art-accent);
+  border-radius: 999px;
+  content: "";
+}
+
+.editorial-art::after {
+  position: absolute;
+  z-index: -1;
+  bottom: -15%;
+  left: 12%;
+  width: 34%;
+  height: 70%;
+  border: 1px solid currentColor;
+  content: "";
+  transform: rotate(17deg);
+}
+
+.editorial-art__kicker,
+.editorial-art__index,
+.editorial-art__word {
+  position: absolute;
+  display: block;
+  text-transform: uppercase;
+}
+
+.editorial-art__kicker {
+  top: 1.25rem;
+  left: 1.25rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+}
+
+.editorial-art__index {
+  top: 1.25rem;
+  right: 1.25rem;
+  font-family: var(--font-newsreader), Georgia, serif;
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
+.editorial-art__word {
+  right: 1.25rem;
+  bottom: 1rem;
+  left: 1.25rem;
+  font-family: var(--font-newsreader), Georgia, serif;
+  font-size: clamp(2.1rem, 6vw, 5.75rem);
+  font-weight: 500;
+  letter-spacing: -0.055em;
+  line-height: 0.82;
+}
+
+.editorial-art--redbull {
+  --art-background: #d5b716;
+  --art-color: #121212;
+  --art-accent: #bd1e2c;
+}
+
+.editorial-art--nike {
+  --art-background: #d7d0c1;
+  --art-color: #111111;
+  --art-accent: #e85d24;
+}
+
+.editorial-art--netflix {
+  --art-background: #b51d25;
+  --art-color: #f7efe5;
+  --art-accent: #141414;
+}
+
+.editorial-art--costco {
+  --art-background: #16467e;
+  --art-color: #f7f3e8;
+  --art-accent: #d43b32;
+}
+
+.editorial-art--ikea {
+  --art-background: #e9be17;
+  --art-color: #0d3564;
+  --art-accent: #0d3564;
+}
+
+.editorial-art--apple {
+  --art-background: #e7e5df;
+  --art-color: #111111;
+  --art-accent: #929292;
+}
+
+.editorial-art--starbucks {
+  --art-background: #0d5b45;
+  --art-color: #f3eee1;
+  --art-accent: #8cc7aa;
+}
+
+@media (max-width: 767px) {
+  .editorial-art {
+    min-height: 14rem;
+  }
+
+  .editorial-art__word {
+    font-size: clamp(2.35rem, 13vw, 4rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
