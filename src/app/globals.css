@@ -1,12 +1,32 @@
 @import "tailwindcss";
 
 :root {
-  --canvas: #0a0a0a;
-  --surface: #121212;
+  color-scheme: light;
+
+  --canvas: #faf9f5;
+  --surface: #ffffff;
+  --surface-raised: #f4f4f2;
+
+  --ink: #111111;
+  --muted: #6b7280;
+
+  --rule: #e5e7eb;
+
+  --accent: #eab308;
+}
+
+.dark {
+  color-scheme: dark;
+
+  --canvas: #090909;
+  --surface: #111111;
   --surface-raised: #181818;
-  --ink: #fafafa;
+
+  --ink: #f5f5f5;
   --muted: #9ca3af;
+
   --rule: #2a2a2a;
+
   --accent: #eab308;
 }
 
@@ -29,14 +49,21 @@
 html {
   background: var(--canvas);
   scroll-behavior: smooth;
+  transition:
+    background-color .25s ease,
+    color .25s ease;
 }
-
 body {
   margin: 0;
   background: var(--canvas);
   color: var(--ink);
   font-family: var(--font-geist), Arial, Helvetica, sans-serif;
   text-rendering: optimizeLegibility;
+
+  transition:
+    background-color .25s ease,
+    color .25s ease,
+    border-color .25s ease;
 }
 
 ::selection {
@@ -215,3 +242,13 @@ summary:focus-visible {
     transition-duration: 0.01ms !important;
   }
 }
+
+*,
+*::before,
+*::after {
+  transition:
+    background-color .25s ease,
+    color .25s ease,
+    border-color .25s ease;
+}
+

@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { Container } from "@/components/ui/Container";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 const navigation = [
   { label: "Articles", href: "/articles" },
@@ -40,31 +41,35 @@ export function Navbar() {
               <path d="m16 16 4 4" stroke="currentColor" strokeWidth="1.5" />
             </svg>
           </Link>
+          <ThemeToggle />
         </nav>
 
-        <details className="mobile-menu relative md:hidden">
-          <summary
-            aria-label="Toggle navigation"
-            className="flex size-11 cursor-pointer flex-col items-center justify-center gap-1.5 border border-rule"
-          >
-            <span className="mobile-menu__line block h-px w-4 bg-ink transition-transform" />
-            <span className="mobile-menu__line block h-px w-4 bg-ink transition-transform" />
-          </summary>
-          <nav
-            aria-label="Mobile"
-            className="absolute right-0 top-[calc(100%+0.75rem)] w-56 border border-rule bg-surface p-3"
-          >
-            {[...navigation, { label: "Search", href: "/search" }].map((item) => (
-              <Link
-                className="flex min-h-11 items-center border-b border-rule px-3 text-sm text-muted last:border-0 hover:text-ink"
-                href={item.href}
-                key={item.href}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-        </details>
+        <div className="flex items-center gap-3 md:hidden">
+          <ThemeToggle />
+          <details className="mobile-menu relative">
+            <summary
+              aria-label="Toggle navigation"
+              className="flex size-11 cursor-pointer flex-col items-center justify-center gap-1.5 border border-rule"
+            >
+              <span className="mobile-menu__line block h-px w-4 bg-ink transition-transform" />
+              <span className="mobile-menu__line block h-px w-4 bg-ink transition-transform" />
+            </summary>
+            <nav
+              aria-label="Mobile"
+              className="absolute right-0 top-[calc(100%+0.75rem)] w-56 border border-rule bg-surface p-3"
+            >
+              {[...navigation, { label: "Search", href: "/search" }].map((item) => (
+                <Link
+                  className="flex min-h-11 items-center border-b border-rule px-3 text-sm text-muted last:border-0 hover:text-ink"
+                  href={item.href}
+                  key={item.href}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </details>
+        </div>
       </Container>
     </header>
   );

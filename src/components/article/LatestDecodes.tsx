@@ -1,51 +1,17 @@
 import { ArticleCard, type ArticleCardData } from "@/components/cards/ArticleCard";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { articles, getArticleCategory } from "@/lib/fixtures";
 
-const articles: ArticleCardData[] = [
-  {
-    title: "Why Nike Sells Identity",
-    slug: "why-nike-sells-identity",
-    category: "Marketing",
-    readTime: "12 min",
-    artwork: "nike",
-  },
-  {
-    title: "The Netflix Flywheel",
-    slug: "the-netflix-flywheel",
-    category: "Growth",
-    readTime: "15 min",
-    artwork: "netflix",
-  },
-  {
-    title: "How Costco Wins",
-    slug: "how-costco-wins",
-    category: "Business Models",
-    readTime: "11 min",
-    artwork: "costco",
-  },
-  {
-    title: "The IKEA Maze Strategy",
-    slug: "the-ikea-maze-strategy",
-    category: "Psychology",
-    readTime: "9 min",
-    artwork: "ikea",
-  },
-  {
-    title: "How Apple Controls Pricing",
-    slug: "how-apple-controls-pricing",
-    category: "Business Models",
-    readTime: "14 min",
-    artwork: "apple",
-  },
-  {
-    title: "The Starbucks Third Place Strategy",
-    slug: "the-starbucks-third-place-strategy",
-    category: "Marketing",
-    readTime: "13 min",
-    artwork: "starbucks",
-  },
-];
+const latestArticles: ArticleCardData[] = articles
+  .filter((article) => !article.featured)
+  .map((article) => ({
+    artwork: article.artwork,
+    category: getArticleCategory(article)?.name ?? "Strategy",
+    readTime: article.readTime,
+    slug: article.slug,
+    title: article.title,
+  }));
 
 const spans = [
   "md:col-span-7",
@@ -66,7 +32,7 @@ export function LatestDecodes() {
           title="Latest decodes."
         />
         <div className="mt-16 grid grid-cols-4 gap-x-5 gap-y-20 md:mt-24 md:grid-cols-12 md:gap-y-28">
-          {articles.map((article, index) => (
+          {latestArticles.map((article, index) => (
             <ArticleCard
               {...article}
               className={`col-span-4 ${spans[index]}`}

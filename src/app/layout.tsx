@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 
 import "./globals.css";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 const geist = localFont({
   src: "./fonts/geist-latin.woff2",
@@ -18,7 +19,11 @@ const newsreader = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Strategy Decode — How Great Companies Win",
+  metadataBase: new URL("https://strategydecode.com"),
+  title: {
+    default: "Strategy Decode",
+    template: "%s | Strategy Decode",
+  },
   description:
     "Deep reporting and analysis on the choices behind competitive advantage.",
 };
@@ -29,8 +34,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geist.variable} ${newsreader.variable}`}>
-      <body>{children}</body>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${geist.variable} ${newsreader.variable}`}
+    >
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

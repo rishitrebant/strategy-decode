@@ -30,7 +30,7 @@ export function Footer() {
           <div className="col-span-4 md:col-span-6">
             <Link
               className="group inline-flex items-center gap-4 font-serif text-[clamp(2.8rem,5vw,5rem)] leading-none tracking-[-0.045em]"
-              href="#top"
+              href="/"
             >
               Strategy Decode
               <ArrowIcon className="size-8 -rotate-45 transition-transform duration-150 group-hover:-translate-y-1 group-hover:translate-x-1" />

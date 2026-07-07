@@ -1,39 +1,7 @@
 import { CategoryCard } from "@/components/cards/CategoryCard";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-
-const categories = [
-  {
-    name: "Marketing",
-    slug: "marketing",
-    description: "How companies create demand, memory, and cultural relevance.",
-  },
-  {
-    name: "Business Models",
-    slug: "business-models",
-    description: "The systems that turn customer value into durable economics.",
-  },
-  {
-    name: "Leadership",
-    slug: "leadership",
-    description: "The consequential decisions made when the path is not obvious.",
-  },
-  {
-    name: "Psychology",
-    slug: "psychology",
-    description: "The invisible forces that shape what people choose and remember.",
-  },
-  {
-    name: "Growth",
-    slug: "growth",
-    description: "Compounding loops, distribution advantages, and paths to scale.",
-  },
-  {
-    name: "Startups",
-    slug: "startups",
-    description: "Early choices that determine whether an ambitious company endures.",
-  },
-] as const;
+import { categories } from "@/lib/fixtures";
 
 export function Categories() {
   return (
