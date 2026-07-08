@@ -1,44 +1,53 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { ArticleCard } from "@/components/cards/ArticleCard";
+import { ArticleCard, type ArticleCardData } from "@/components/cards/ArticleCard";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { Container } from "@/components/ui/Container";
+import { SanityImage } from "@/components/ui/SanityImage";
+import { client } from "@/sanity/lib/client";
 import {
-  authors,
-  getArticleCategory,
-  getArticlesByAuthor,
-  getAuthorBySlug,
-} from "@/lib/fixtures";
+  allAuthorSlugsQuery,
+  authorArticlesQuery,
+  authorBySlugQuery,
+} from "@/sanity/lib/queries";
 
 type AuthorPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export function generateStaticParams() {
-  return authors.map((author) => ({ slug: author.slug }));
+type AuthorData = {
+  name: string;
+  slug: string;
+  role?: string;
+  shortBio?: string;
+  portrait?: unknown;
+};
+
+export async function generateStaticParams() {
+  const slugs = await client.fetch<{ slug: string }[]>(allAuthorSlugsQuery);
+  return slugs.map((item) => ({ slug: item.slug }));
 }
 
-export async function generateMetadata({
-  params,
-}: AuthorPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: AuthorPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const author = getAuthorBySlug(slug);
+  const author = await client.fetch<AuthorData | null>(authorBySlugQuery, { slug });
 
   return {
     title: author?.name ?? "Author not found",
-    description: author?.bio,
+    description: author?.shortBio,
   };
 }
 
 export default async function AuthorPage({ params }: AuthorPageProps) {
   const { slug } = await params;
-  const author = getAuthorBySlug(slug);
+  const [author, authorArticles] = await Promise.all([
+    client.fetch<AuthorData | null>(authorBySlugQuery, { slug }),
+    client.fetch<ArticleCardData[]>(authorArticlesQuery, { authorSlug: slug }),
+  ]);
 
   if (!author) notFound();
-
-  const authorArticles = getArticlesByAuthor(author.slug);
 
   return (
     <div className="min-h-screen bg-canvas text-ink">
@@ -46,7 +55,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
       <main className="py-16 sm:py-24">
         <Container>
           <section className="grid gap-8 md:grid-cols-12">
-            <div className="size-32 bg-accent md:col-span-3" aria-hidden="true" />
+            <SanityImage className="size-32 md:col-span-3" value={author.portrait as never} />
             <div className="md:col-span-8">
               <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-accent">
                 Author
@@ -54,12 +63,8 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
               <h1 className="mt-5 font-serif text-[clamp(4rem,9vw,8rem)] font-medium leading-[0.82] tracking-[-0.06em]">
                 {author.name}
               </h1>
-              <p className="mt-4 text-sm uppercase tracking-[0.16em] text-muted">
-                {author.role}
-              </p>
-              <p className="mt-8 max-w-3xl text-xl leading-8 text-muted">
-                {author.bio}
-              </p>
+              <p className="mt-4 text-sm uppercase tracking-[0.16em] text-muted">{author.role}</p>
+              <p className="mt-8 max-w-3xl text-xl leading-8 text-muted">{author.shortBio}</p>
             </div>
           </section>
 
@@ -74,15 +79,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
             </div>
             <div className="grid grid-cols-4 gap-x-5 gap-y-20 md:grid-cols-12">
               {authorArticles.map((article) => (
-                <ArticleCard
-                  artwork={article.artwork}
-                  category={getArticleCategory(article)?.name ?? "Strategy"}
-                  className="col-span-4 md:col-span-6"
-                  key={article.slug}
-                  readTime={article.readTime}
-                  slug={article.slug}
-                  title={article.title}
-                />
+                <ArticleCard {...article} className="col-span-4 md:col-span-6" key={article.slug} />
               ))}
             </div>
           </section>

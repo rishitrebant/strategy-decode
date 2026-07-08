@@ -4,40 +4,33 @@ import Link from "next/link";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { Container } from "@/components/ui/Container";
-import { articles, getArticleCategory } from "@/lib/fixtures";
+import { client } from "@/sanity/lib/client";
+import { searchArticlesQuery } from "@/sanity/lib/queries";
 
 type SearchPageProps = {
   searchParams: Promise<{ q?: string }>;
 };
 
+type SearchResult = {
+  slug: string;
+  title: string;
+  excerpt?: string;
+  category?: { title: string; slug: string } | null;
+};
+
 export const metadata: Metadata = {
   title: "Search",
   description: "Search Strategy Decode articles.",
-  robots: {
-    index: false,
-    follow: true,
-  },
+  robots: { index: false, follow: true },
 };
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const { q = "" } = await searchParams;
-  const query = q.trim().toLowerCase();
+  const query = q.trim();
   const results =
     query.length < 2
       ? []
-      : articles.filter((article) => {
-          const category = getArticleCategory(article)?.name ?? "";
-          return [
-            article.title,
-            article.dek,
-            article.excerpt,
-            category,
-            ...article.tags,
-          ]
-            .join(" ")
-            .toLowerCase()
-            .includes(query);
-        });
+      : await client.fetch<SearchResult[]>(searchArticlesQuery, { q: query });
 
   return (
     <div className="min-h-screen bg-canvas text-ink">
@@ -77,19 +70,15 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           </form>
 
           <section className="mt-16 max-w-4xl">
-            {query.length === 0 && (
-              <p className="text-muted">Enter at least two characters to search.</p>
-            )}
-            {query.length === 1 && (
-              <p className="text-muted">Search terms need at least two characters.</p>
-            )}
+            {query.length === 0 && <p className="text-muted">Enter at least two characters to search.</p>}
+            {query.length === 1 && <p className="text-muted">Search terms need at least two characters.</p>}
             {query.length >= 2 && results.length === 0 && (
-              <p className="text-muted">No results for “{q}”.</p>
+              <p className="text-muted">No results for "{q}".</p>
             )}
             {results.length > 0 && (
               <div className="space-y-8">
                 <p className="text-sm uppercase tracking-[0.16em] text-muted">
-                  {results.length} result{results.length === 1 ? "" : "s"} for “{q}”
+                  {results.length} result{results.length === 1 ? "" : "s"} for "{q}"
                 </p>
                 {results.map((article) => (
                   <Link
@@ -98,14 +87,12 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                     key={article.slug}
                   >
                     <span className="text-[0.68rem] uppercase tracking-[0.18em] text-accent">
-                      {getArticleCategory(article)?.name}
+                      {article.category?.title}
                     </span>
                     <h2 className="mt-3 font-serif text-5xl leading-none tracking-[-0.04em]">
                       {article.title}
                     </h2>
-                    <p className="mt-4 max-w-2xl leading-7 text-muted">
-                      {article.excerpt}
-                    </p>
+                    <p className="mt-4 max-w-2xl leading-7 text-muted">{article.excerpt}</p>
                   </Link>
                 ))}
               </div>

@@ -51,6 +51,46 @@ export const siteSettings = defineType({
       ],
     }),
     defineField({
+      name: "footerLinkGroups",
+      title: "Footer link groups",
+      type: "array",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "footerLinkGroup",
+          fields: [
+            defineField({ name: "title", title: "Group title", type: "string" }),
+            defineField({
+              name: "links",
+              title: "Links",
+              type: "array",
+              of: [
+                defineArrayMember({
+                  type: "object",
+                  fields: [
+                    defineField({ name: "label", title: "Label", type: "string" }),
+                    defineField({ name: "href", title: "URL/path", type: "string" }),
+                  ],
+                }),
+              ],
+            }),
+          ],
+        }),
+      ],
+    }),
+    defineField({
+      name: "footerTagline",
+      title: "Footer tagline",
+      description: 'e.g. "Clarity over noise"',
+      type: "string",
+    }),
+    defineField({
+      name: "footerDescription",
+      title: "Footer description",
+      type: "text",
+      rows: 2,
+    }),
+    defineField({
       name: "socialProfiles",
       title: "Social profiles",
       type: "object",

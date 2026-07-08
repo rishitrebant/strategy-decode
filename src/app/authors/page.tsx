@@ -4,15 +4,27 @@ import Link from "next/link";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { Container } from "@/components/ui/Container";
+import { SanityImage } from "@/components/ui/SanityImage";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { authors, getArticlesByAuthor } from "@/lib/fixtures";
+import { client } from "@/sanity/lib/client";
+import { allAuthorsQuery } from "@/sanity/lib/queries";
 
 export const metadata: Metadata = {
   title: "Authors",
   description: "Author profiles and archives for Strategy Decode.",
 };
 
-export default function AuthorsPage() {
+type AuthorData = {
+  name: string;
+  slug: string;
+  role?: string;
+  shortBio?: string;
+  portrait?: unknown;
+};
+
+export default async function AuthorsPage() {
+  const authors = await client.fetch<AuthorData[]>(allAuthorsQuery);
+
   return (
     <div className="min-h-screen bg-canvas text-ink">
       <Navbar />
@@ -26,21 +38,16 @@ export default function AuthorsPage() {
                 href={`/authors/${author.slug}`}
                 key={author.slug}
               >
-                <div className="size-24 bg-accent md:col-span-2" aria-hidden="true" />
-                <div className="md:col-span-7">
-                  <h2 className="font-serif text-5xl tracking-[-0.04em]">
-                    {author.name}
-                  </h2>
+                <SanityImage className="size-24 md:col-span-2" value={author.portrait as never} />
+                <div className="md:col-span-10">
+                  <h2 className="font-serif text-5xl tracking-[-0.04em]">{author.name}</h2>
                   <p className="mt-2 text-sm uppercase tracking-[0.16em] text-accent">
                     {author.role}
                   </p>
                   <p className="mt-4 max-w-2xl text-base leading-7 text-muted">
-                    {author.bio}
+                    {author.shortBio}
                   </p>
                 </div>
-                <p className="text-sm text-muted md:col-span-3 md:text-right">
-                  {getArticlesByAuthor(author.slug).length} articles
-                </p>
               </Link>
             ))}
           </div>

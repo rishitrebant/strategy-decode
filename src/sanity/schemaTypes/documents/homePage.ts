@@ -28,6 +28,20 @@ export const homePage = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: "heroBadge",
+      title: "Hero badge",
+      description: 'Small label, e.g. "Independent Publication".',
+      type: "string",
+    }),
+    defineField({
+      name: "heroTags",
+      title: "Hero tags",
+      description: 'Short list shown under the intro, e.g. Strategy / Power / Growth / Psychology.',
+      type: "array",
+      of: [defineArrayMember({ type: "string" })],
+      validation: (rule) => rule.max(6),
+    }),
+    defineField({
       name: "featuredStory",
       title: "Featured story",
       type: "reference",

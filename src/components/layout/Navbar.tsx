@@ -2,14 +2,23 @@ import Link from "next/link";
 
 import { Container } from "@/components/ui/Container";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { client } from "@/sanity/lib/client";
+import { siteSettingsQuery } from "@/sanity/lib/queries";
 
-const navigation = [
+type NavItem = { label: string; href: string };
+type SiteSettings = { title?: string; navigation?: NavItem[] };
+
+const fallbackNav: NavItem[] = [
   { label: "Articles", href: "/articles" },
   { label: "Categories", href: "/categories" },
   { label: "Authors", href: "/authors" },
-] as const;
+];
 
-export function Navbar() {
+export async function Navbar() {
+  const settings = await client.fetch<SiteSettings | null>(siteSettingsQuery);
+  const navigation = settings?.navigation?.length ? settings.navigation : fallbackNav;
+  const siteTitle = settings?.title ?? "Strategy Decode";
+
   return (
     <header className="relative z-20 border-b border-rule bg-canvas">
       <Container className="flex h-[4.75rem] items-center justify-between">
@@ -18,7 +27,7 @@ export function Navbar() {
           href="/"
         >
           <span aria-hidden="true" className="size-2 bg-accent" />
-          Strategy Decode
+          {siteTitle}
         </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-9 md:flex">

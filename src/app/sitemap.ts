@@ -1,10 +1,23 @@
 import type { MetadataRoute } from "next";
 
-import { articles, authors, categories } from "@/lib/fixtures";
+import { client } from "@/sanity/lib/client";
+import {
+  allArticleSlugsQuery,
+  allAuthorSlugsQuery,
+  allCategorySlugsQuery,
+  siteSettingsQuery,
+} from "@/sanity/lib/queries";
 
-const baseUrl = "https://strategydecode.com";
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [settings, articleSlugs, categorySlugs, authorSlugs] = await Promise.all([
+    client.fetch<{ baseUrl?: string } | null>(siteSettingsQuery),
+    client.fetch<{ slug: string; publishedAt?: string }[]>(allArticleSlugsQuery),
+    client.fetch<{ slug: string }[]>(allCategorySlugsQuery),
+    client.fetch<{ slug: string }[]>(allAuthorSlugsQuery),
+  ]);
 
-export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = settings?.baseUrl ?? "https://strategydecode.com";
+
   const staticRoutes = [
     "",
     "/articles",
@@ -20,15 +33,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}${route}`,
       lastModified: new Date(),
     })),
-    ...articles.map((article) => ({
+    ...articleSlugs.map((article) => ({
       url: `${baseUrl}/articles/${article.slug}`,
-      lastModified: new Date(article.publishedAt),
+      lastModified: article.publishedAt ? new Date(article.publishedAt) : new Date(),
     })),
-    ...categories.map((category) => ({
+    ...categorySlugs.map((category) => ({
       url: `${baseUrl}/categories/${category.slug}`,
       lastModified: new Date(),
     })),
-    ...authors.map((author) => ({
+    ...authorSlugs.map((author) => ({
       url: `${baseUrl}/authors/${author.slug}`,
       lastModified: new Date(),
     })),

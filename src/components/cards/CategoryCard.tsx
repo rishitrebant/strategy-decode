@@ -3,18 +3,13 @@ import Link from "next/link";
 import { ArrowIcon } from "@/components/ui/ArrowIcon";
 
 type CategoryCardProps = {
-  description: string;
+  description?: string;
   index: string;
-  name: string;
+  title: string;
   slug: string;
 };
 
-export function CategoryCard({
-  description,
-  index,
-  name,
-  slug,
-}: CategoryCardProps) {
+export function CategoryCard({ description, index, title, slug }: CategoryCardProps) {
   return (
     <Link
       className="group col-span-2 flex min-h-56 flex-col justify-between border-t border-rule py-5 transition-colors duration-150 hover:border-accent md:col-span-4 lg:min-h-64"
@@ -26,7 +21,7 @@ export function CategoryCard({
       </div>
       <div>
         <h3 className="font-serif text-[clamp(2rem,3.4vw,3.8rem)] font-medium leading-none tracking-[-0.04em]">
-          {name}
+          {title}
         </h3>
         <p className="mt-4 max-w-xs text-sm leading-6 text-muted">{description}</p>
       </div>
